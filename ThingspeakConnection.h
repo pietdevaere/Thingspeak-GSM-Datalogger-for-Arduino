@@ -88,7 +88,8 @@ class ThingspeakConnection {
       /// **********************************
       /// Here we do the actual HTTP request
       /// **********************************
-      serial->print("GET /update?api_key=YDHVCBHPKX9TOPXF&field1=");
+      //serial->print("GET /update?api_key=OS71Z8EIK1W9YMVN&field1=");
+        serial->print("GET /update?api_key=WDCCZYQW85T4I5IF&field1=");
       serial->print(bat);
       serial->print("&field2=");
       serial->print(sensor1);
@@ -112,21 +113,22 @@ class ThingspeakConnection {
         D_MSG(2, "Sending was not successful!");
         return false;
       } else D_MSG(2, "TCP Data Sent");
-      if (!readUntil("Status: 200 OK", SLOW_TIMEOUT)) {
+      if (!readUntil("200 OK", SLOW_TIMEOUT)) {
         D_MSG(2, "HTML Status is not 200, there is some error!");
         return false;
       }
-      readUntil("\r\n\r\n", SLOW_TIMEOUT);//Read until that empty line right after the http header
-      int responseNr = serial->parseInt();
-      if (responseNr == 0) {
-        D_MSG(2, "The running counter from thingspeak was 0! We did not successfully send the data!");
-        return false;
-      } else {
-        D_MSG(2, "Response was"); D_MSG(4, responseNr);
-      }
-
-      if (!readUntil("CLOSED\r\n", SLOW_TIMEOUT))
-        D_MSG(2, "Somehow we did not read CLOSED!");
+      D_MSG(2, "Got 200 OK from server");
+      //readUntil("\r\n\r\n", SLOW_TIMEOUT);//Read until that empty line right after the http header
+      //int responseNr = serial->parseInt();
+      //if (responseNr == 0) {
+      //  D_MSG(2, "The running counter from thingspeak was 0! We did not successfully send the data!");
+      //  return false;
+      //} else {
+      //  D_MSG(2, "Response was"); D_MSG(4, responseNr);
+      //}
+      //
+      //if (!readUntil("CLOSED\r\n", SLOW_TIMEOUT))
+      //  D_MSG(2, "Somehow we did not read CLOSED!");
 
       lastPackageSent = millis(); //TODO maybe replace this with a different timer because millis might be broken with the watchdog
       numSuccesses++;
@@ -232,6 +234,8 @@ class ThingspeakConnection {
           return false;
         }
         char inchar = serial->read();
+        //D_MSG(0, inchar);  // MOD
+        //Serial.print(inchar);
         if (inchar == *answer)
           ++answer;
         else

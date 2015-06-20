@@ -10,8 +10,10 @@
 #define MODEM_RESET_PIN 4
 
 #define NUM_TRANSMISSION_RETRIES 5
-#define DELAY_AFTER_TRANSMISSION_FAILURE 60*60*5 //in seconds
+#define DELAY_AFTER_TRANSMISSION_FAILURE 60*30 //in seconds
 #define REGULAR_UPDATE_INTERVAL 60*60*22 //in seconds
+
+int ledFlag = 0;
 
 //http://api.thingspeak.com/update?api_key=YDHVCBHPKX9TOPXF&field1=BATTERY&field2=SENSOR1&field3=SENSOR2
 SoftwareSerial modemSerial(8, 3); // RX, TX
@@ -88,6 +90,7 @@ class Queue {
       return (i + 1) % QSIZE;
     }
 
+
     inline uint8_t prev(uint8_t i) {
       return i == 0 ? QSIZE - 1 : i - 1;
     }
@@ -106,6 +109,8 @@ void setup()
   modemSerial.begin(9600);
   //  while (!Serial) {} //Needs to be commented out when running in "headless" mode (without a serial monitor open)
   enableSensors();
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
 
 }
 
@@ -159,6 +164,8 @@ void loop() {
   }
 
   elapsedSeconds += 8;
+  //ledFlag = !ledFlag;
+  //digitalWrite(13, ledFlag);
 
   if (mode == REGULAR) {
     if (elapsedSeconds >= nextRegularUpdate) {
