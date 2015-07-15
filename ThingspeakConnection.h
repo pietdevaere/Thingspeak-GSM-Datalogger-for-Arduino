@@ -95,8 +95,8 @@ class ThingspeakConnection {
       serial->print(sensor1);
       serial->print("&field3=");
       serial->print(sensor2);
-//      serial->print("&field4=");
-//      serial->print(estTime);
+      serial->print("&field4=");
+      serial->print(sensor1+sensor2);
 //      serial->print("&field5=");
 //      serial->print(thisPushT);
 //      serial->print("&field6=");
